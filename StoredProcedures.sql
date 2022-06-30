@@ -117,7 +117,7 @@ CREATE PROCEDURE sp_RegistrarUsuario(
     @Edad tinyint,
     @EscuelaProcedencia nvarchar(100),
     --Grado varchar (10),
-    @Ciudad nvarchar(60), --Default como --"Zacatlán" (Posiblemente)
+    --/* @Ciudad*/ --Definida Default como --"Zacatlán"
     @Calle nvarchar(100),
     @Telefono varchar(20), 
     @Email nvarchar(100)
@@ -130,8 +130,10 @@ IF @EscuelaProcedencia IS NULL
    BEGIN
       SET @EscuelaProcedencia = 'NINGUNA';
    END
-  INSERT INTO Usuario (Nombre, A_Paterno, A_Materno, Edad, EscuelaProcedencia, Ciudad, Calle, Telefono, Email)
-               VALUES (@Nombre, @A_Paterno, @A_Materno, @Edad, @EscuelaProcedencia, @Ciudad, --Posible Default como --"Zacatlán"
-                      @Calle, @Telefono, @Email)
+   INSERT INTO Usuario (Nombre, A_Paterno, A_Materno, Edad, EscuelaProcedencia, Calle, Telefono, Email)
+                VALUES (@Nombre, @A_Paterno, @A_Materno, @Edad, @EscuelaProcedencia,@Calle, @Telefono, @Email)--/* @Ciudad*/ --Posible Default como --"Zacatlán"
 END
 go
+sp_RegistrarUsuario Dave,nava,gesssarC,19,tec,octubre,124141414,"holaaaaaaaaaaaaa";
+go
+select * from Usuario;

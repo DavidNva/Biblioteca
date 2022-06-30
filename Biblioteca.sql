@@ -135,16 +135,16 @@ go
 CREATE UNIQUE INDEX Idx_Autor_NombreCompleto ON Autor(Nombre, Apellidos);
 go
 --Creacion de CONSTRAINT
+--Checks
 ALTER TABLE Usuario
 ADD CONSTRAINT CH_Usuario_Edad CHECK(Edad>0 and Edad <=125);
 go
---agregar las siguientes tres lineas al script original
 ALTER TABLE Ejemplar
 ADD CONSTRAINT CH_Ejemplar_NumEjemplar CHECK(NumEjemplar>=0 and NumEjemplar <=500);
 go
-/*ALTER TABLE Usuario
-ADD CONSTRAINT DF_Usuario_Ciudad DEFAULT 'ZACATLÁN' FOR Ciudad;
-go*/
+--Defaults
+ALTER TABLE Usuario
+ADD CONSTRAINT DF_Usuario_Ciudad DEFAULT 'ZACATLÁN' FOR Ciudad
 ALTER TABLE Usuario
 ADD CONSTRAINT DF_Usuario_Observaciones DEFAULT 'NINGUNA' FOR Observaciones;
 go
