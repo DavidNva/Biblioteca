@@ -106,4 +106,32 @@ IF EXISTS (SELECT *  FROM Autor WHERE IDAutor = @IdAutorSP )
    WHERE IDAutor = @IDAutorSP;
   END
 END;
---------------------------------------------------------------------------------------------------------------------------
+go
+---------------------------------------------------Usuario--------------------------------------------------------------
+--************************* Registrar Usuario *******************************
+CREATE PROCEDURE sp_RegistrarUsuario( 
+    --@IDUsuario int,
+    @Nombre nvarchar(40),
+    @A_Paterno varchar(20),
+    @A_Materno varchar(20),
+    @Edad tinyint,
+    @EscuelaProcedencia nvarchar(100),
+    --Grado varchar (10),
+    @Ciudad nvarchar(60), --Default como --"Zacatlán" (Posiblemente)
+    @Calle nvarchar(100),
+    @Telefono varchar(20), 
+    @Email nvarchar(100)
+    --posiblemente agregar el fk de tipo de persona
+   -- @Observaciones varchar(500) --Estará definida como default, como "Ninguna"
+  )--TERMINAN LOS PARAMETROS
+AS
+BEGIN
+IF @EscuelaProcedencia IS NULL
+   BEGIN
+      SET @EscuelaProcedencia = 'NINGUNA';
+   END
+  INSERT INTO Usuario (Nombre, A_Paterno, A_Materno, Edad, EscuelaProcedencia, Ciudad, Calle, Telefono, Email)
+               VALUES (@Nombre, @A_Paterno, @A_Materno, @Edad, @EscuelaProcedencia, @Ciudad, --Posible Default como --"Zacatlán"
+                      @Calle, @Telefono, @Email)
+END
+go
