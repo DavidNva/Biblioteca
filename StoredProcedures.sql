@@ -2,7 +2,7 @@ USE Biblioteca
 go
 ----------------------------------------------------SALA------------------------------------------------------------------------
 --************************* Autogenerar Codigo Sala***********************************
-CREATE PROCEDURE sp_RegistrarSala ( @NombreSala varchar(30)) --Generar codigo autoomaticamente e hacer demas inserciones
+CREATE PROCEDURE sp_RegistrarSala ( @NombreSala varchar(30)) --Generar codigo autoomaticamente e hacer demas inserciones --Hay un indice unico para sala
 AS
 BEGIN
   DECLARE @CodSala VARCHAR(10), @Cod int
@@ -27,7 +27,7 @@ END;
 go
 ---------------------------------------------------CATEGORIA-------------------------------------------------------------------
 --************************* Autogenerar Codigo Categoria*******************************
-CREATE PROCEDURE sp_RegistrarCategoria ( @NombreCategoria varchar(50)) --Generar codigo autoomaticamente e hacer demas inserciones
+CREATE PROCEDURE sp_RegistrarCategoria ( @NombreCategoria varchar(50)) --Generar codigo autoomaticamente e hacer demas inserciones -Hay un indice unico para categoria
 AS
 BEGIN
   DECLARE @CodCategoria VARCHAR(10), @Cod int
@@ -52,16 +52,16 @@ END;
 go
 ---------------------------------------------------Editorial-------------------------------------------------------------------
 --************************* Autogenerar Codigo Editorial*******************************
-CREATE PROCEDURE sp_RegistrarEditorial ( @NombreEditorial varchar(60)) --Generar codigo autoomaticamente e hacer demas inserciones
+CREATE PROCEDURE sp_RegistrarEditorial ( @NombreEditorial varchar(60)) --Generar codigo autoomaticamente e hacer demas inserciones -Hay un indice unico para editorial
 AS
 BEGIN
   DECLARE @CodEditorial VARCHAR(10), @Cod int
-  SELECT @Cod = RIGHT(MAX(IDEditorial),3 ) + 1 FROM Editorial;--Estamos seleccionando los numeros
+  SELECT @Cod = RIGHT(MAX(IDEditorial),4 ) + 1 FROM Editorial;--Estamos seleccionando los numeros
     IF @Cod IS NULL --Pero si en inicio no hay ningun dato
       BEGIN  
         SElECT @Cod = 1; --Entonces asignamos como primer numero = 1
       END
-        SELECT @CodEditorial = CONCAT('ED',RIGHT(CONCAT('0000',@Cod),3));--Al tener dos letras, cambia el numero a recorrer a 3
+        SELECT @CodEditorial = CONCAT('ED',RIGHT(CONCAT('0000',@Cod),4));--Al tener dos letras, cambia el numero a recorrer a 3
         INSERT INTO Editorial VALUES (@CodEditorial,@NombreEditorial)
 END
 go
@@ -77,7 +77,7 @@ END;
 go
 ---------------------------------------------------Autor------------------------------------------------------------------------
 --************************* Autogenerar Codigo Autor *******************************
-CREATE PROCEDURE sp_RegistrarAutor ( @NombreAutor varchar(40), @ApellidosAutor varchar(40)) --Generar codigo autoomaticamente e hacer demas inserciones
+CREATE PROCEDURE sp_RegistrarAutor ( @NombreAutor varchar(40), @ApellidosAutor varchar(40)) --Hay un indice unico para el nombre completo de autor
 AS
 BEGIN
   DECLARE @CodAutor VARCHAR(10), @Cod int
@@ -135,7 +135,7 @@ IF @EscuelaProcedencia IS NULL
 END
 go
 --*************************** Actualizar Usuario*********************************** 
-CREATE PROCEDURE sp_ActualizarUsuario(
+CREATE PROCEDURE sp_ActualizarUsuario(--Hay un indice unico para el nombre completo del usuario 
     @IDUsuarioSP varchar(10),
     @NombreUsuarioSP nvarchar(40),
     @A_PaternoSP varchar(20),
@@ -172,19 +172,19 @@ END;
 go
 ---------------------------------------------------Ejemplar------------------------------------------------------------
 --************************* Autogenerar Codigo Ejemplar y registrar*******************************
-CREATE PROCEDURE sp_RegistrarEjemplar (
+CREATE PROCEDURE sp_RegistrarEjemplar (--Hay un indice unico para validar el idlibro
   @NumEjemplar varchar(60),
   @ID_Libro_EJ varchar(25)
   ) --Generar codigo autoomaticamente e hacer demas inserciones
 AS
 BEGIN
   DECLARE @CodEjemplar VARCHAR(10), @Cod int
-  SELECT @Cod = RIGHT(MAX(IDEjemplar),3 ) + 1 FROM Ejemplar;--Estamos seleccionando los numeros
+  SELECT @Cod = RIGHT(MAX(IDEjemplar),4 ) + 1 FROM Ejemplar;--Estamos seleccionando los numeros
     IF @Cod IS NULL --Pero si en inicio no hay ningun dato
       BEGIN  
         SElECT @Cod = 1; --Entonces asignamos como primer numero = 1
       END
-        SELECT @CodEjemplar = CONCAT('EJ',RIGHT(CONCAT('0000',@Cod),3));--Al tener dos letras, cambia el numero a recorrer a 3
+        SELECT @CodEjemplar = CONCAT('EJ',RIGHT(CONCAT('0000',@Cod),4));--Al tener dos letras, cambia el numero a recorrer a 3
         INSERT INTO Ejemplar VALUES (@CodEjemplar,@NumEjemplar,@ID_Libro_EJ)
 END
 go
@@ -252,7 +252,7 @@ go
 --*************************** Actualizar Prestamo Devuelto con la fecha*********************************** 
 CREATE PROCEDURE sp_ActualizarPrestamoDevYFecha( --Servira cuando se devuelva un libro, donde obviamente debemos ingresar la fechaDev
 @IDPrestamoDSP varchar(10),
-@DevueltoSiNoSP varchar(60),
+@DevueltoSiNoSP bit,
 @FechaDevolucionDSP date
 )
 AS
@@ -274,4 +274,22 @@ BEGIN
     END
 END;
 go
-select * from Usuario;
+---------------------------------------------------Libro Autor------------------------------------------------------------
+--************************* Autogenerar Codigo LibroAutor*******************************
+CREATE PROCEDURE sp_RegistrarLibroAutor ( --Hay un indice unico compuesto de los dos valores
+  @ID_Libro_LA varchar(25),
+  @ID_Autor varchar(10)
+  ) --Generar codigo autoomaticamente e hacer demas inserciones
+AS
+BEGIN
+  DECLARE @CodLibroAutor VARCHAR(10), @Cod int
+  SELECT @Cod = RIGHT(MAX(IDLibroAutor),4 ) + 1 FROM LibroAutor;--Estamos seleccionando los numeros
+    IF @Cod IS NULL --Pero si en inicio no hay ningun dato
+      BEGIN  
+        SElECT @Cod = 1; --Entonces asignamos como primer numero = 1
+      END
+        SELECT @CodLibroAutor = CONCAT('LA',RIGHT(CONCAT('0000',@Cod),4));--Al tener dos letras, cambia el numero a recorrer a 3
+        INSERT INTO LibroAutor VALUES (@CodLibroAutor, @ID_Libro_LA, @ID_Autor)
+END
+go
+select * from Libro;

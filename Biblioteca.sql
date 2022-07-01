@@ -134,6 +134,9 @@ CREATE UNIQUE INDEX Idx_Usuario_NombreCompleto ON Usuario(Nombre, A_Paterno, A_M
 go
 CREATE UNIQUE INDEX Idx_Autor_NombreCompleto ON Autor(Nombre, Apellidos);
 go
+CREATE UNIQUE INDEX Idx_Ejemplar_ID_Libro ON Ejemplar(ID_Libro); --AGREGAR A SCRIPT ORIGINAL
+go
+CREATE UNIQUE INDEX Idx_LibroAUtor ON LibroAutor(ID_Libro,ID_Autor); --AGREGAR A SCRIPT ORIGINAL
 --Creacion de CONSTRAINT
 --Checks
 ALTER TABLE Usuario
@@ -253,49 +256,49 @@ INSERT INTO LibrosActualizados VALUES('Actualización',SYSTEM_USER,GETDATE(),@ID
 go
 --Insertarción de  2 registros a cada tabla
 INSERT INTO Sala(IDSala,Sala)
-VALUES('S1','GENERAL'),
-      ('S2','INFANTIL')
+VALUES('S0001','GENERAL'),
+      ('S0002','INFANTIL')
 go 
 INSERT INTO Categoria(IDCategoria,Categoria)
-VALUES('C1','CONSULTA'),
-      ('C2','GENERALIDADES'),
-      ('C3','FILOSOFÍA Y PSICOLOGÍA'),
-      ('C4','LITERATURA')
+VALUES('C0001','CONSULTA'),
+      ('C0002','GENERALIDADES'),
+      ('C0003','FILOSOFÍA Y PSICOLOGÍA'),
+      ('C0004','LITERATURA')
 go
 INSERT INTO Editorial(IDEditorial,Editorial)
-VALUES('ED1','PORRÚA'),
-      ('ED2','ANAGRAMA'),
-      ('ED3','OCEANO'),
-      ('ED4','PUNTO DE ENCUENTRO')
+VALUES('ED0001','PORRÚA'),
+      ('ED0002','ANAGRAMA'),
+      ('ED0003','OCEANO'),
+      ('ED0004','PUNTO DE ENCUENTRO')
 go
 INSERT INTO Libro(IDLibro,Titulo,Ubicacion,NumEdicion,AñoEdicion,Volumen,NumPaginas,Observaciones,ID_Sala,ID_Categoria,ID_Editorial)
-VALUES('027.009S42', 'COMO UNA NOVELA','0-100','SEGUNDA EDICIÓN','2008',1,169,'ENE PERFECTO ESTADO','S1','C3','ED3'),
-      ('028.9P47', 'EL LIBRO DE LAS BIBLIOTECAS','0-100','PRIMERA EDICIÓN','2000',1,169,'MALTRATADO EN LA PORTADA','S1','C3','ED1'),
-      ('63B349U47', 'EL ÚLTIMO VUELO','800-899','SEGUNDA EDICIÓN','2001',1,119,'EN PERFECTO ESTADO','S1','C4','ED4');
+VALUES('027.009S42', 'COMO UNA NOVELA','0-100','SEGUNDA EDICIÓN','2008',1,169,'ENE PERFECTO ESTADO','S0001','C0003','ED0003'),
+      ('028.9P47', 'EL LIBRO DE LAS BIBLIOTECAS','0-100','PRIMERA EDICIÓN','2000',1,169,'MALTRATADO EN LA PORTADA','S0001','C0003','ED0001'),
+      ('63B349U47', 'EL ÚLTIMO VUELO','800-899','SEGUNDA EDICIÓN','2001',1,119,'EN PERFECTO ESTADO','S0001','C0004','ED0004');
 go 
 INSERT INTO Autor(IDAutor,Nombre,Apellidos)
-VALUES('A1', 'MAUREN','SAWA'),
-      ('A2', 'DANIEL','PENNAC'),
-      ('A3', 'ALBERTO','BASSO'),
-      ('A4', 'JESÚS','BALLAZ');
+VALUES('A0001', 'MAUREN','SAWA'),
+      ('A0002', 'DANIEL','PENNAC'),
+      ('A0003', 'ALBERTO','BASSO'),
+      ('A0004', 'JESÚS','BALLAZ');
 go 
 INSERT INTO LibroAutor(IDLibroAutor,ID_Libro,ID_Autor)
-VALUES('AL1', '027.009S42','A2'),
-      ('AL2', '028.9P47','A1'),
-      ('AL3', '63B349U47','A4');
+VALUES('LA0001', '027.009S42','A0002'),
+      ('LA0002', '028.9P47','A0001'),
+      ('LA0003', '63B349U47','A0004');
 go 
 INSERT INTO Usuario(Nombre, A_Paterno, A_Materno, Edad, EscuelaProcedencia, Ciudad, Calle, Telefono, Email)
 VALUES('DAVID', 'NAVA','GARCÍA',19,'CENTRO ESCOLAR','ZACATLÁN','JOSÉ MARIA MORELOS','7841261514','davidnava@gmail.com'),--'LA ÚLTIMA VEZ QUE PIDIÓ UN EJEMPLAR, LO ENTREGÓ CON UN MES DE RETRASO'),
       ('OSCAR', 'MARCOS','MÁRQUEZ',17,null,'CHIGNAHUAPAN','2 DE ABRIL','7978792516','oscarmarcos@gmail.com');
 go 
 INSERT INTO Ejemplar(IDEjemplar,NumEjemplar,ID_Libro)
-VALUES('EJ1',3,'027.009S42' ),
-      ('EJ2',1,'028.9P47'),
-      ('EJ3',5,'63B349U47');
+VALUES('EJ0001',3,'027.009S42' ),
+      ('EJ0002',1,'028.9P47'),
+      ('EJ0003',5,'63B349U47');
 go
 INSERT INTO Prestamo(ID_Usuario,ID_Ejemplar,FechaMaxDev, Observaciones)
-VALUES(1,'EJ1','22/02/2022','EL LIBRO SE ENTREGÓ EN PERFECTO ESTADO'),
-      (2,'EJ3','23/05/2022','LA PORTADA DEL LIBRO SE ENTREGÓ UN POCO MALTRATADA');  
+VALUES(1,'EJ0001','22/02/2022','EL LIBRO SE ENTREGÓ EN PERFECTO ESTADO'),
+      (2,'EJ0003','23/05/2022','LA PORTADA DEL LIBRO SE ENTREGÓ UN POCO MALTRATADA');  
 go
 SELECT * FROM Ejemplar;
 SELECT * FROM Prestamo; 
