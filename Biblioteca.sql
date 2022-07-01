@@ -48,7 +48,7 @@ CREATE TABLE LibroAutor(
     IDLibroAutor varchar(10)  not null CONSTRAINT PK_LibroAutor PRIMARY KEY,
     --Llaves foraneas
     ID_Libro varchar(25) not null CONSTRAINT FK_Libro FOREIGN KEY(ID_Libro) 
-    REFERENCES Libro(IDLibro),
+    REFERENCES Libro(IDLibro) ON DELETE CASCADE ON UPDATE CASCADE,
     ID_Autor varchar(10) not null CONSTRAINT FK_Autor FOREIGN KEY(ID_Autor) 
     REFERENCES Autor(IDAutor)
     );
@@ -73,7 +73,7 @@ CREATE TABLE Ejemplar(
     NumEjemplar int not null,
     --Llave foranea
     ID_Libro varchar(25) not null CONSTRAINT FK_Ejemplar_Libro FOREIGN KEY(ID_Libro) 
-    REFERENCES Libro(IDLibro)
+    REFERENCES Libro(IDLibro) ON DELETE CASCADE ON UPDATE CASCADE
     );
 go
 CREATE TABLE Prestamo(
@@ -146,6 +146,9 @@ ALTER TABLE Ejemplar
 ADD CONSTRAINT CH_Ejemplar_NumEjemplar CHECK(NumEjemplar>=0 and NumEjemplar <=500);
 go
 --Defaults
+ALTER TABLE Libro
+ADD CONSTRAINT DF_Libro_Observaciones DEFAULT 'EN PERFECTO ESTADO' FOR Observaciones
+go
 ALTER TABLE Usuario
 ADD CONSTRAINT DF_Usuario_Ciudad DEFAULT 'ZACATLÁN' FOR Ciudad
 ALTER TABLE Usuario

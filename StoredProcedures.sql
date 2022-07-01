@@ -309,4 +309,77 @@ IF EXISTS (SELECT *  FROM LibroAutor WHERE IDLibroAutor = @IdLibroAutorSP )
   END
 END;
 go
-select * from Libro;
+------------------------------------------------------Libro----------------------------------------------------------
+--************************* Registrar Libro ********************************
+CREATE PROCEDURE sp_RegistrarLibro (
+    @IDLibro varchar(25),
+    @Titulo nvarchar(130),
+    @Ubicacion varchar(10),
+    @NumEdicion varchar(60),
+    @AñoEdicion varchar(5),
+    @Volumen tinyint,
+    @NumPaginas int,
+   -- @Observaciones varchar(500), --Definido como default: EN PERFECTO ESTADO
+    --Llaves foraneas
+    @ID_Sala varchar(10),
+    @ID_Categoria varchar(10),
+    @ID_Editorial varchar(10)
+   ) 
+AS
+BEGIN
+  INSERT INTO Libro(IDLibro, Titulo, Ubicacion, NumEdicion, AñoEdicion, Volumen, NumPaginas,
+                        ID_Sala, ID_Categoria, ID_Editorial)
+                VALUES (@IDLibro, @Titulo, @Ubicacion, @NumEdicion, @AñoEdicion, @Volumen, @NumPaginas,
+                        @ID_Sala, @ID_Categoria, @ID_Editorial)
+END
+go
+--*************************** Actualizar Libro Completo*********************************** 
+CREATE PROCEDURE sp_ActualizarLibro(--Actualiza todos los campos, menos el ID
+    @IDLibroSP varchar(25),
+    @TituloSP nvarchar(130),
+    @UbicacionSP varchar(10),
+    @NumEdicionSP varchar(60),
+    @AñoEdicionSP varchar(5),
+    @VolumenSP tinyint,
+    @NumPaginasSP int,
+    @Observaciones varchar(500), --Definido como default: EN PERFECTO ESTADO
+    --Llaves foraneas
+    @ID_SalaSP varchar(10),
+    @ID_Categoria varchar(10),
+    @ID_Editorial varchar(10) 
+  ) 
+AS
+BEGIN --EJemplo anterior
+ --IF NOT EXISTS (SELECT * FROM Editorial WHERE Editorial =@EditorialSP and IdEditorial != @IdEditorialSP)
+  IF EXISTS (SELECT *  FROM Libro WHERE IDLibro = @IdLibroSP )
+    BEGIN
+	    UPDATE Libro SET 
+       Titulo = @TituloSP,
+       Ubicacion = @UbicacionSP,
+       NumEdicion = @NumEdicionSP,
+       AñoEdicion = @AñoEdicionSP,
+       Volumen = @VolumenSP,
+       NumPaginas = @NumPaginasSP,
+       Observaciones = @Observaciones, --Definido como default: EN PERFECTO ESTADO
+    --Llaves foraneas
+       ID_Sala = @ID_SalaSP,
+       ID_Categoria = @ID_Categoria,
+       ID_Editorial = @ID_Editorial 
+      WHERE IDLibro = @IDLibroSP;
+    END
+END;
+go
+--*************************** Actualizar CodigoLibro *********************************** 
+CREATE PROCEDURE sp_ActualizarCodigoLibro(--Actualiza todos los campos, menos el ID
+    @IDLibro_CodigoSP varchar(25),--En este se indica el codigo actual del libro para identificar la actualizacion
+    @IDLibroActualizarSP varchar(25) --En este se indica el nuevo codigo o ID para el libro
+  ) 
+AS
+BEGIN 
+  IF EXISTS (SELECT *  FROM Libro WHERE IDLibro = @IdLibro_CodigoSP )
+    BEGIN
+	    UPDATE Libro SET IDLibro = @IDLibroActualizarSP WHERE IDLibro = @IDLibro_CodigoSP;
+    END
+END;
+go
+----------------------------------------------------------------------------------
