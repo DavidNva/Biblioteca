@@ -93,8 +93,8 @@ go
 --*************************** Actualizar Autor*********************************** 
 CREATE PROCEDURE sp_ActualizarAutor
 @IDAutorSP varchar(10),
-@NombreAutorSP varchar(60),
-@ApellidosSP varchar(60)
+@NombreAutorSP varchar(40),
+@ApellidosSP varchar(40)
 AS
 BEGIN--EJemplo anterior
 --IF NOT EXISTS (SELECT * FROM Editorial WHERE Editorial =@EditorialSP and IdEditorial != @IdEditorialSP)
@@ -136,7 +136,7 @@ END
 go
 --*************************** Actualizar Usuario*********************************** 
 CREATE PROCEDURE sp_ActualizarUsuario(--Hay un indice unico para el nombre completo del usuario 
-    @IDUsuarioSP varchar(10),
+    @IDUsuarioSP int,
     @NombreUsuarioSP nvarchar(40),
     @A_PaternoSP varchar(20),
     @A_MaternoSP varchar(20),
@@ -173,7 +173,7 @@ go
 ---------------------------------------------------Ejemplar------------------------------------------------------------
 --************************* Autogenerar Codigo Ejemplar y registrar*******************************
 CREATE PROCEDURE sp_RegistrarEjemplar (--Hay un indice unico para validar el idlibro
-  @NumEjemplar varchar(60),
+  @NumEjemplar int,
   @ID_Libro_EJ varchar(25)
   ) --Generar codigo autoomaticamente e hacer demas inserciones
 AS
@@ -191,7 +191,7 @@ go
 --*************************** Actualizar Ejemplar*********************************** 
 CREATE PROCEDURE sp_ActualizarEjemplar(
 @IDEjemplarSP varchar(10),
-@NumEjemplarSP varchar(60),
+@NumEjemplarSP int,
 @ID_Libro_EJSP varchar(25)
 )
 AS
@@ -291,5 +291,22 @@ BEGIN
         SELECT @CodLibroAutor = CONCAT('LA',RIGHT(CONCAT('0000',@Cod),4));--Al tener dos letras, cambia el numero a recorrer a 3
         INSERT INTO LibroAutor VALUES (@CodLibroAutor, @ID_Libro_LA, @ID_Autor)
 END
+go
+--*************************** Actualizar LibroAutor*********************************** 
+CREATE PROCEDURE sp_ActualizarLibroAutor 
+@IDLibroAutorSP varchar(10),
+@ID_Libro_LASP varchar(60),
+@ID_Autor_LASP varchar(60)
+AS
+BEGIN--EJemplo anterior
+--IF NOT EXISTS (SELECT * FROM Editorial WHERE Editorial =@EditorialSP and IdEditorial != @IdEditorialSP)
+IF EXISTS (SELECT *  FROM LibroAutor WHERE IDLibroAutor = @IdLibroAutorSP )
+  BEGIN
+	UPDATE LibroAutor SET 
+  ID_Libro = @ID_LIBRO_LASP,
+  ID_Autor = @ID_Autor_LASP
+   WHERE IDLibroAutor = @IDLibroAutorSP;
+  END
+END;
 go
 select * from Libro;

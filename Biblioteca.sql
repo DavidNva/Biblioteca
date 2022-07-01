@@ -6,7 +6,7 @@ USE Biblioteca;
 go
 --Creacion de tablas y relaciones
 CREATE TABLE Sala(
-    IDSala varchar(5)  not null CONSTRAINT PK_Sala PRIMARY KEY,
+    IDSala varchar(10)  not null CONSTRAINT PK_Sala PRIMARY KEY,
     Sala varchar(30) not null,
     );
 go
@@ -30,7 +30,7 @@ CREATE TABLE Libro(
     NumPaginas int not null,
     Observaciones varchar(500) not null,
     --Llaves foraneas
-    ID_Sala varchar(5) not null CONSTRAINT FK_Sala FOREIGN KEY(ID_Sala) 
+    ID_Sala varchar(10) not null CONSTRAINT FK_Sala FOREIGN KEY(ID_Sala) 
     REFERENCES Sala(IDSala),
     ID_Categoria varchar(10) not null CONSTRAINT FK_Categoria FOREIGN KEY(ID_Categoria) 
     REFERENCES Categoria(IDCategoria),
@@ -115,8 +115,8 @@ CREATE TABLE LibrosActualizados(
     Observaciones varchar(500) not null,
     ObservacionesAnterior varchar(500) not null,
     --Llaves foraneas
-    ID_Sala varchar(5) not null,
-    ID_SalaAnterior varchar(5) not null,
+    ID_Sala varchar(10) not null,
+    ID_SalaAnterior varchar(10) not null,
     ID_Categoria varchar(10) not null,
     ID_CategoriaAnterior varchar(10) not null,
     ID_Editorial varchar(10) not null,
@@ -134,9 +134,9 @@ CREATE UNIQUE INDEX Idx_Usuario_NombreCompleto ON Usuario(Nombre, A_Paterno, A_M
 go
 CREATE UNIQUE INDEX Idx_Autor_NombreCompleto ON Autor(Nombre, Apellidos);
 go
-CREATE UNIQUE INDEX Idx_Ejemplar_ID_Libro ON Ejemplar(ID_Libro); --AGREGAR A SCRIPT ORIGINAL
+CREATE UNIQUE INDEX Idx_Ejemplar_ID_Libro ON Ejemplar(ID_Libro); 
 go
-CREATE UNIQUE INDEX Idx_LibroAUtor ON LibroAutor(ID_Libro,ID_Autor); --AGREGAR A SCRIPT ORIGINAL
+CREATE UNIQUE INDEX Idx_LibroAUtor ON LibroAutor(ID_Libro,ID_Autor); 
 --Creacion de CONSTRAINT
 --Checks
 ALTER TABLE Usuario
@@ -209,7 +209,7 @@ DECLARE @AñoEdicionT varchar(5)
 DECLARE @VolumenT tinyint
 DECLARE @NumPaginasT int 
 DECLARE @ObservacionesT varchar(500)
-DECLARE @ID_SalaT varchar(5) 
+DECLARE @ID_SalaT varchar(10) 
 DECLARE @ID_CategoriaT varchar(10) 
 DECLARE @ID_EditorialT varchar(10) 
 ---
@@ -221,7 +221,7 @@ DECLARE @AñoEdicionTAnterior varchar(5)
 DECLARE @VolumenTAnterior tinyint
 DECLARE @NumPaginasTAnterior int  
 DECLARE @ObservacionesTAnterior varchar(500) 
-DECLARE @ID_SalaTAnterior varchar(5) 
+DECLARE @ID_SalaTAnterior varchar(10) 
 DECLARE @ID_CategoriaTAnterior varchar(10)
 DECLARE @ID_EditorialTAnterior varchar(10) 
 
@@ -303,7 +303,4 @@ go
 SELECT * FROM Ejemplar;
 SELECT * FROM Prestamo; 
 SELECT * FROM LibrosActualizados;
---SELECT * FROM Usuario; 
---SELECT * FROM Libro;
---UPDATE LIBRO SET Volumen = 7 WHERE IDLibro = '028.9P47';
 go
