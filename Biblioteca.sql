@@ -38,6 +38,14 @@ CREATE TABLE Libro(
     REFERENCES Editorial(IDEditorial)
     );
 go
+/*
+ALTER TABLE libro
+ADD 
+    RutaPortada nvarchar(200)  null,
+    NombrePortada nvarchar(200)  null,
+    Imagen binary  null;
+go 
+*/
 CREATE TABLE Autor(
     IDAutor varchar(10)  not null CONSTRAINT PK_Autor PRIMARY KEY,
     Nombre nvarchar(40) not null,
@@ -53,6 +61,11 @@ CREATE TABLE LibroAutor(
     REFERENCES Autor(IDAutor)
     );
 go
+CREATE TABLE TipoPersona(
+    IdTipoPersona  int identity  CONSTRAINT PK_TipoPersona PRIMARY KEY,
+    Descripcion varchar(50)
+)
+go
 CREATE TABLE Usuario(
     IDUsuario int identity  not null CONSTRAINT PK_Usuario PRIMARY KEY,
     Nombre nvarchar(40) not null,
@@ -65,7 +78,10 @@ CREATE TABLE Usuario(
     Calle nvarchar(100) not null,
     Telefono varchar(20) not null, 
     Email nvarchar(100) null,
-    Observaciones varchar(500) not null --Estará definida como default, como "Ninguna"
+    Observaciones varchar(500) not null, --Estará definida como default, como "Ninguna"
+    ID_TipoPersona int not null CONSTRAINT FK_TipoPersona FOREIGN KEY(ID_TipoPersona) --Se agregaron estos dos nuevos campos a usuario
+    REFERENCES TipoPersona(IdTipoPersona) DEFAULT 1,
+    FechaCreacion date not null DEFAULT GETDATE()
     );
 go
 CREATE TABLE Ejemplar(
@@ -289,10 +305,20 @@ INSERT INTO LibroAutor(IDLibroAutor,ID_Libro,ID_Autor)
 VALUES('LA0001', '027.009S42','A0002'),
       ('LA0002', '028.9P47','A0001'),
       ('LA0003', '63B349U47','A0004');
+go
+INSERT INTO TipoPersona(Descripcion)
+VALUES ('Lector'),
+       ('Empleado'),
+       ('Administrador')
+go 
+INSERT INTO Usuario(Nombre, A_Paterno, A_Materno, Edad, EscuelaProcedencia, Calle, Telefono, Email,ID_TipoPersona)
+VALUES('DAVID', 'NAVA','GARCIA',19,'ITSSNP','ANGEL WENCESLAO CABRERA','7641291840','davidnavagarcia4@gmail.com',3),--'LA ÚLTIMA VEZ QUE PIDIÓ UN EJEMPLAR, LO ENTREGÓ CON UN MES DE RETRASO'),
+      ('LUIS', 'CABRERA','LOBATO',19,'LUIS CABRERA LOBATO','PENDIENTE','0987654321','luiscabreralobato@gmail.com',3),
+      ('JUAN', 'GUTIERREZ','SOTO',19,'LUIS CABRERA LOBATO','PENDIENTE','1234567890','luiscabreralobato@gmail.com',2);
 go 
 INSERT INTO Usuario(Nombre, A_Paterno, A_Materno, Edad, EscuelaProcedencia, Ciudad, Calle, Telefono, Email)
-VALUES('DAVID', 'NAVA','GARCÍA',19,'CENTRO ESCOLAR','ZACATLÁN','JOSÉ MARIA MORELOS','7841261514','davidnava@gmail.com'),--'LA ÚLTIMA VEZ QUE PIDIÓ UN EJEMPLAR, LO ENTREGÓ CON UN MES DE RETRASO'),
-      ('OSCAR', 'MARCOS','MÁRQUEZ',17,null,'CHIGNAHUAPAN','2 DE ABRIL','7978792516','oscarmarcos@gmail.com');
+VALUES('YETLANECI', 'LOPEZ','JUAREZ',19,'CENTRO ESCOLAR','ZACATLÁN','JOSÉ MARIA MORELOS','7841261514','yetlaneci_lopez@gmail.com'),--'LA ÚLTIMA VEZ QUE PIDIÓ UN EJEMPLAR, LO ENTREGÓ CON UN MES DE RETRASO'),
+      ('ANGEL', 'MARCOS','SANTIAGO',17,null,'CHIGNAHUAPAN','2 DE ABRIL','7978792516',null);
 go 
 INSERT INTO Ejemplar(IDEjemplar,NumEjemplar,ID_Libro)
 VALUES('EJ0001',3,'027.009S42' ),
@@ -303,7 +329,9 @@ INSERT INTO Prestamo(ID_Usuario,ID_Ejemplar,FechaMaxDev, Observaciones)
 VALUES(1,'EJ0001','22/02/2022','EL LIBRO SE ENTREGÓ EN PERFECTO ESTADO'),
       (2,'EJ0003','23/05/2022','LA PORTADA DEL LIBRO SE ENTREGÓ UN POCO MALTRATADA');  
 go
-SELECT * FROM Ejemplar;
-SELECT * FROM Prestamo; 
-SELECT * FROM LibrosActualizados;
+SELECT * FROM TipoPersona;
+SELECT * FROM Usuario;
+--SELECT * FROM Ejemplar;
+--SELECT * FROM Prestamo; 
+--SELECT * FROM HLibrosActualizados;
 go

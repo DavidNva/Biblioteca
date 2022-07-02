@@ -107,9 +107,10 @@ IF EXISTS (SELECT *  FROM Autor WHERE IDAutor = @IdAutorSP )
   END
 END;
 go
----------------------------------------------------Usuario--------------------------------------------------------------
+---------------------------------------------------Usuario------------------------------------------------------------
+go
 --************************* Registrar Usuario *******************************
-CREATE PROCEDURE sp_RegistrarUsuario( 
+CREATE PROCEDURE sp_RegistrarUsuario(--Hay un indice unico para el nombre completo del usuario 
     --@IDUsuario int,
     @Nombre nvarchar(40),
     @A_Paterno varchar(20),
@@ -117,13 +118,16 @@ CREATE PROCEDURE sp_RegistrarUsuario(
     @Edad tinyint,
     @EscuelaProcedencia nvarchar(100),
     --Grado varchar (10),
-    --/* @Ciudad*/ --Definida Default como --"Zacatlán"
+    --/* @Ciudad*/ --Posible Default como --"Zacatlán"
     @Calle nvarchar(100),
     @Telefono varchar(20), 
     @Email nvarchar(100)
     --posiblemente agregar el fk de tipo de persona
    -- @Observaciones varchar(500) --Estará definida como default, como "Ninguna"
+    --@ID_TipoPersona int --ESTARA COMO DEFAULT = 1, ES DECIR, COMO LECTOR
+    --FechaCreacion date --Esta como default DEFAULT GETDATE()
   )--TERMINAN LOS PARAMETROS
+
 AS
 BEGIN
 IF @EscuelaProcedencia IS NULL
@@ -134,8 +138,37 @@ IF @EscuelaProcedencia IS NULL
                 VALUES (@Nombre, @A_Paterno, @A_Materno, @Edad, @EscuelaProcedencia,@Calle, @Telefono, @Email)--/* @Ciudad*/ --Posible Default como --"Zacatlán"
 END
 go
+--************************* Registrar Usuario Indicando TipoPersona*******************************
+CREATE PROCEDURE sp_RegistrarUsuarioConTipoPersona(--Hay un indice unico para el nombre completo del usuario 
+    --@IDUsuario int,
+    @Nombre nvarchar(40),
+    @A_Paterno varchar(20),
+    @A_Materno varchar(20),
+    @Edad tinyint,
+    @EscuelaProcedencia nvarchar(100),
+    --Grado varchar (10),
+    --/* @Ciudad*/ --Posible Default como --"Zacatlán"
+    @Calle nvarchar(100),
+    @Telefono varchar(20), 
+    @Email nvarchar(100),
+    --posiblemente agregar el fk de tipo de persona
+   -- @Observaciones varchar(500) --Estará definida como default, como "Ninguna"
+    @ID_TipoPersona int --ESTARA COMO DEFAULT = 1, ES DECIR, COMO LECTOR
+    --FechaCreacion date --Esta como default DEFAULT GETDATE()
+  )--TERMINAN LOS PARAMETROS
+
+AS
+BEGIN
+IF @EscuelaProcedencia IS NULL
+   BEGIN
+      SET @EscuelaProcedencia = 'NINGUNA';
+   END
+   INSERT INTO Usuario (Nombre, A_Paterno, A_Materno, Edad, EscuelaProcedencia, Calle, Telefono, Email,ID_TipoPersona)
+                VALUES (@Nombre, @A_Paterno, @A_Materno, @Edad, @EscuelaProcedencia,@Calle, @Telefono, @Email,@ID_TipoPersona)--/* @Ciudad*/ --Posible Default como --"Zacatlán"
+END
+go
 --*************************** Actualizar Usuario*********************************** 
-CREATE PROCEDURE sp_ActualizarUsuario(--Hay un indice unico para el nombre completo del usuario 
+CREATE PROCEDURE sp_ActualizarUsuario(
     @IDUsuarioSP int,
     @NombreUsuarioSP nvarchar(40),
     @A_PaternoSP varchar(20),
@@ -147,7 +180,9 @@ CREATE PROCEDURE sp_ActualizarUsuario(--Hay un indice unico para el nombre compl
     @CalleSP nvarchar(100),
     @TelefonoSP varchar(20), 
     @EmailSP nvarchar(100),
-    @ObservacionesSP nvarchar(100)
+    @ObservacionesSP nvarchar(100),
+    @ID_TipoPersonaSP int
+    --FechaCreacion date --Esta como default DEFAULT GETDATE()
 )
 AS
 BEGIN--EJemplo anterior
@@ -165,7 +200,8 @@ IF EXISTS (SELECT *  FROM Usuario WHERE IDUsuario = @IdUsuarioSP )
   Calle = @CalleSP,
   Telefono = @TelefonoSP, 
   Email = @EmailSP,
-  OBservaciones = @ObservacionesSP
+  OBservaciones = @ObservacionesSP,
+  ID_TipoPersona = @ID_TipoPersonaSP
   WHERE IDUsuario = @IDUsuarioSP;
   END
 END;
@@ -395,3 +431,5 @@ BEGIN
 END;
 go
 ----------------------------------------------------------------------------------
+SELECT * FROM TipoPersona;
+SELECT * FROM Usuario;
