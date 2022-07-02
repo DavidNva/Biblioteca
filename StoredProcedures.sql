@@ -235,17 +235,29 @@ CREATE PROCEDURE sp_ActualizarPrestamo(
 AS
 BEGIN
   IF EXISTS (SELECT *  FROM Prestamo WHERE IDPrestamo = @IdPrestamoSP )
+    IF @DevueltoSP = 1
     BEGIN
-	    UPDATE Prestamo SET 
+	   UPDATE Prestamo SET 
        ID_Usuario = @ID_UsuarioSP,
        ID_Ejemplar = @ID_EjemplarSP,
        FechaPrestamo = @FechaPrestamoSP,--Estará asignada automáticamente con el CONSTRAINT DEFAULT -- DF_Prestamo_FechaPrestamo
        FechaMaxDev = @FechaMaxDevSP,
        Devuelto = @DevueltoSP,--1 es igual a si, y 0 es igual a no . Asigando por default como 0, 
        FechaDevolucion = @FechaDevolucionSP,--No especificaremos nada para que por default sea null
-       Observaciones = @ObservacionesSP
-
-      WHERE IDPrestamo = @IDPrestamoSP;
+       Observaciones = @ObservacionesSP 
+     WHERE IDPrestamo = @IDPrestamoSP;
+    END
+ ELSE --(SELECT *  FROM Prestamo WHERE IDPrestamo = @IdPrestamoDSP)--(SELECT *  FROM Prestamo WHERE IDPrestamo = @IdPrestamoDSP AND Devuelto = 1)
+    BEGIN
+	   UPDATE Prestamo SET 
+       ID_Usuario = @ID_UsuarioSP,
+       ID_Ejemplar = @ID_EjemplarSP,
+       FechaPrestamo = @FechaPrestamoSP,--Estará asignada automáticamente con el CONSTRAINT DEFAULT -- DF_Prestamo_FechaPrestamo
+       FechaMaxDev = @FechaMaxDevSP,
+       Devuelto = @DevueltoSP,--1 es igual a si, y 0 es igual a no . Asigando por default como 0, 
+       FechaDevolucion = NULL,--No especificaremos nada para que por default sea null
+       Observaciones = @ObservacionesSP  
+     WHERE IDPrestamo = @IDPrestamoSP;
     END
 END;
 go
