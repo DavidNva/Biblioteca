@@ -93,7 +93,7 @@ CREATE TABLE Prestamo(
     Observaciones varchar(500) not null
     );
 go
-CREATE TABLE LibrosActualizados(
+CREATE TABLE HLibrosActualizados(
     IDLibrosActualizados int identity CONSTRAINT PK_LibrosActualizados PRIMARY KEY,
     TipoAccion varchar(20) not null,
     Usuario VARCHAR(30) not null,
@@ -251,7 +251,7 @@ SELECT @ID_CategoriaTAnterior = ID_Categoria from deleted
 SELECT @ID_EditorialT = ID_Editorial from inserted
 SELECT @ID_EditorialTAnterior = ID_Editorial from deleted
 
-INSERT INTO LibrosActualizados VALUES('Actualización',SYSTEM_USER,GETDATE(),@IDLibroT,@IDLibroAnterior,@TituloT,@TituloTAnterior,@UbicacionT,@UbicacionTAnterior,
+INSERT INTO HLibrosActualizados VALUES('Actualización',SYSTEM_USER,GETDATE(),@IDLibroT,@IDLibroAnterior,@TituloT,@TituloTAnterior,@UbicacionT,@UbicacionTAnterior,
                                       @NumEdicionT,@NumEdicionTAnterior,@AñoEdicionT,@AñoEdicionTAnterior,@VolumenT,@VolumenTAnterior,
                                       @NumPaginasT,@NumPaginasTAnterior,@ObservacionesT,@ObservacionesTAnterior,
                                       @ID_SalaT,@ID_SalaTAnterior,@ID_CategoriaT,@ID_CategoriaTAnterior,@ID_EditorialT,@ID_EditorialTAnterior)
